@@ -1,6 +1,6 @@
 
 /*
- * *** PLACE YOUR NAME / SECTION HERE ***
+ * *** Xander Estevez COMP272-002 ***
  *
  * Homework # 2 (Programming Assignment). This Java class defines a few basic
  * manipulation operations of a binary trees.
@@ -16,7 +16,7 @@ import java.util.LinkedList;
  * Class BinaryTree
  *
  * This class defines a binary tree object; it is a tree structure where every
- * node as at most two child nodes, which form the tree branches. That implies
+ * node has at most two child nodes, which form the tree branches. That implies
  * that each node within the tree has a degree of 0, 1, or 2. A node of degree
  * zero (0) is called a terminal node, or leaf node.
  *
@@ -58,7 +58,7 @@ public class BinaryTree {
         root = node;
     }
 
-    /* 
+    /*
      * Class Node
      *
      * The node object definition for each node of the bin ary tree.
@@ -178,7 +178,7 @@ public class BinaryTree {
      * which does the actual work. The public wrapper method simply passes the root
      * of the tree to helper method.
      */
-    
+
     public String preOrder() {
         return preOrderHelper(root);
     }
@@ -222,8 +222,16 @@ public class BinaryTree {
 
     private void replaceValueHelper(Node node, int oldVal, int newVal) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
+        //If there is an old value in nodes it will be changed to a new value
+        if (node.data == oldVal) {
+            node.data = newVal;
+        }
+
+        //Value Helper will check if the nodes exist
+        if (node.right != null)
+            replaceValueHelper (node.right, oldVal, newVal);
+        if (node.left != null)
+            replaceValueHelper (node.left, oldVal, newVal);
 
     }
 
@@ -244,10 +252,18 @@ public class BinaryTree {
 
     private int findMinHelper(Node node) {
 
-        // ADD YOUR CODE HERE -- USE DEPTH FIRST SEARCH OF
-        // BINARY TREE (WHICH IS BASED ON RECURSION)
+        //If the node is null from the start then it will return that Max Value
+        if (node == null) {
+            return Integer.MAX_VALUE;
+        }
 
-        return Integer.MAX_VALUE;
+        int rightMin = findMinHelper(node.right); //Find min value in right tree
+        int leftMin = findMinHelper(node.left); //Find min value in left tree
+
+        //Will return the smallest value in the left, right, and current node
+        return Math.min(node.data, Math.min(leftMin, rightMin));
+
+
     }
 
 
@@ -271,8 +287,20 @@ public class BinaryTree {
 
         // return -1; // RECALL, IF TREE IS EMPTY, RETURN -1
 
+        //This i can be incremented as a counter so that the
+        //exact amount of nodes that are bigger than val can be counted
+        int i = 0;
 
-        return -1;
+        //i will be returned if current node is zero
+        if (node == null) {
+            return i;
+        }
+
+        // This will increment i when the value that is greater than val is found
+        if (node.data > val)
+            i++;
+
+        return i + nodesGTHelper(node.left, val) + nodesGTHelper(node.right, val);
     }
 
 
@@ -311,6 +339,15 @@ public class BinaryTree {
         // COUNT LOCATIONS IN THE RETURNED ARRAY AS SHOWN BELOW, ELSE
         // THE 'SUM' IS RETURNED IN INDEX LOCATION 0, AND COUNT IS LOCATION 1
 
-        return new int[]{0, 0};
+        if(n == null) {
+            return new int[]{0, 0};
+        }
+        int[] right = averageHelper(n.right);
+        int[] left = averageHelper(n.left);
+
+        int count = 1 + right[1] + left[1];
+        int sum = n.data + right[0] + left[0];
+
+        return new int[] {sum, count};
     }
 }
